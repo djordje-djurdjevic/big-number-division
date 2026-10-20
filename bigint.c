@@ -7,7 +7,7 @@
 constexpr int BASE = 10;
 constexpr int CAPACITY_START = 8;
 
-static void append_digit(BigInt *big_int, uint8_t digit);
+static void append_digit(BigInt* big_int, uint8_t digit);
 static int_fast8_t compare(const BigInt* first_op, const BigInt* second_op);
 static void subtract(BigInt* first_op, const BigInt* second_op);
 
@@ -35,17 +35,17 @@ DivResult big_int_div(const BigInt* dividend, const BigInt* divisor)
     assert(R.digits != nullptr);
 
 
-    for(size_t i = 0; i < dividend->length; i++)
+    for (size_t i = 0; i < dividend->length; i++)
     {
         append_digit(&R, dividend->digits[i]);
 
         uint8_t q = 0;
-        while(compare(&R, divisor) >= 0)
+        while (compare(&R, divisor) >= 0)
         {
             subtract(&R, divisor);
             q++;
         }
-        if(q != 0 || ret_val.quotient.length > 0) //won't write zero at first index
+        if (q != 0 || ret_val.quotient.length > 0) //won't write zero at first index
         {
             ret_val.quotient.digits[ret_val.quotient.length++] = q;
         }
@@ -64,16 +64,20 @@ DivResult big_int_div(const BigInt* dividend, const BigInt* divisor)
     }
 
     uint8_t *tmp = realloc(ret_val.quotient.digits, ret_val.quotient.length * sizeof(uint8_t));
-    if (tmp != nullptr) ret_val.quotient.digits = tmp;
-
+    if (tmp != nullptr) 
+    {
+        ret_val.quotient.digits = tmp;
+    }
 
     ret_val.remainder = R;
     bool rem_zero = (R.length == 1 && R.digits[0] == 0);
     ret_val.remainder.negative = rem_zero ? false : dividend->negative;
 
     tmp = realloc(ret_val.remainder.digits, ret_val.remainder.length * sizeof(uint8_t));
-    if (tmp != nullptr) ret_val.remainder.digits = tmp;
-
+    if (tmp != nullptr) 
+    {
+        ret_val.remainder.digits = tmp;
+    }
     return ret_val;
 }
 
@@ -93,8 +97,14 @@ BigInt get_big_number(void)
     int c; //int because return value of func getchar() is int
     c = getchar();
 
-    if     (c == '-') {ret_val.negative = true;  c = getchar();}
-    else if(c == '+') {ret_val.negative = false; c = getchar();}
+    if (c == '-') 
+    {
+        ret_val.negative = true;  c = getchar();
+    }
+    else if (c == '+') 
+    {
+        ret_val.negative = false; c = getchar();
+    }
 
     if (c == '0')
     {
@@ -120,12 +130,18 @@ BigInt get_big_number(void)
     }
 
     assert(ret_val.length != 0);
-    if(ret_val.length == 1 && ret_val.digits[0] == 0) {ret_val.negative = false;}
+    if(ret_val.length == 1 && ret_val.digits[0] == 0) 
+    {
+        ret_val.negative = false;
+    }
 
 
     uint8_t *tmp = realloc(ret_val.digits, ret_val.length * sizeof(uint8_t));
-    if (tmp != nullptr) ret_val.digits = tmp; 
-    
+    if (tmp != nullptr) 
+    {
+        ret_val.digits = tmp; 
+    }
+
     return ret_val;
 }
 
@@ -140,7 +156,7 @@ void print_big_int(const BigInt* big_int)
 {
 
     printf("Number: %s", big_int->negative ? "-" : "");
-    for(size_t i = 0; i < big_int->length; i++)
+    for (size_t i = 0; i < big_int->length; i++)
     {
         printf("%hhu",big_int->digits[i]);
     }
@@ -149,7 +165,7 @@ void print_big_int(const BigInt* big_int)
 
 }
 
-static void append_digit(BigInt *big_int, uint8_t digit)
+static void append_digit(BigInt* big_int, uint8_t digit)
 {
     if (big_int->length == 1 && big_int->digits[0] == 0) 
     {
@@ -163,13 +179,25 @@ static void append_digit(BigInt *big_int, uint8_t digit)
 
 static int_fast8_t compare(const BigInt* first_op, const BigInt* second_op)
 {
-    if      (first_op->length > second_op->length) return CMP_GREATER; 
-    else if (first_op->length < second_op->length) return CMP_LESS;
-
-    for(size_t i = 0; i < first_op->length; i++)
+    if (first_op->length > second_op->length) 
     {
-        if      (first_op->digits[i] > second_op->digits[i]) return CMP_GREATER;
-        else if (first_op->digits[i] < second_op->digits[i]) return CMP_LESS;
+        return CMP_GREATER;
+    } 
+    else if (first_op->length < second_op->length) 
+    {
+        return CMP_LESS;
+    }
+
+    for (size_t i = 0; i < first_op->length; i++)
+    {
+        if (first_op->digits[i] > second_op->digits[i]) 
+        {
+            return CMP_GREATER;
+        }
+        else if (first_op->digits[i] < second_op->digits[i]) 
+        {
+            return CMP_LESS;
+        }
     }
     return CMP_EQUAL;
 }
@@ -200,12 +228,12 @@ static void subtract(BigInt* first_op, const BigInt* second_op)
             first_op->digits[j] -= (int)second_op->digits[i];
         }
 
-        if(borrow) //borrow has to go recursively if the digit at borrowing index is zero
+        if (borrow) //borrow has to go recursively if the digit at borrowing index is zero
         {
-            size_t borrowing_index = j -1;
-            while(first_op->digits[borrowing_index] == 0 && borrowing_index != 0)
+            size_t borrowing_index = j - 1;
+            while (first_op->digits[borrowing_index] == 0 && borrowing_index != 0)
             {
-                first_op->digits[borrowing_index] = BASE -1;
+                first_op->digits[borrowing_index] = BASE - 1;
                 borrowing_index--;
             }   
 
@@ -217,7 +245,7 @@ static void subtract(BigInt* first_op, const BigInt* second_op)
     
     // (divisor = 22 (example)) remainder: 078, 02 
     size_t leading_zeros = 0;
-    while(leading_zeros < first_op->length -1  &&  first_op->digits[leading_zeros] == 0)
+    while (leading_zeros < first_op->length - 1  &&  first_op->digits[leading_zeros] == 0)
     {
         leading_zeros++;
     }

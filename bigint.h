@@ -2,7 +2,7 @@
 #define BIGINT_H
 
 #include <stdio.h>
-#include <inttypes.h>
+#include <stdint.h>
 
 enum { CMP_LESS = -1, CMP_EQUAL = 0, CMP_GREATER = 1 };
 
