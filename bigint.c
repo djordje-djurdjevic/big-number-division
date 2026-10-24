@@ -51,7 +51,7 @@ DivResult big_int_div(const BigInt* dividend, const BigInt* divisor)
         }
     }
 
-    // quotient is zero (example 6/7)
+    // quotient is zero (example 6 / 7)
     if (ret_val.quotient.length == 0)
     {
         ret_val.quotient.digits[0] = 0;
@@ -120,7 +120,8 @@ BigInt get_big_number(void)
 
         ret_val.digits[ret_val.length++] = (uint8_t)digit;
         if (ret_val.length >= capacity)
-        {
+        {   
+            assert(capacity <= SIZE_MAX / 2);
             capacity *= 2;
             ret_val.digits = realloc(ret_val.digits, capacity * sizeof(uint8_t));
             assert(ret_val.digits != nullptr);
@@ -167,7 +168,7 @@ void print_big_int(const BigInt* big_int)
 
 static void append_digit(BigInt* big_int, uint8_t digit)
 {
-    if (big_int->length == 1 && big_int->digits[0] == 0) 
+    if (big_int->length == 1 && big_int->digits[0] == 0) // example: 253 / 5  [2, 5]  subtract returns [0]
     {
         big_int->digits[0] = digit; 
     }
@@ -243,7 +244,7 @@ static void subtract(BigInt* first_op, const BigInt* second_op)
     }
 
     
-    // (divisor = 22 (example)) remainder: 078, 02 
+    // (example) remainder: 078, 02 
     size_t leading_zeros = 0;
     while (leading_zeros < first_op->length - 1  &&  first_op->digits[leading_zeros] == 0)
     {

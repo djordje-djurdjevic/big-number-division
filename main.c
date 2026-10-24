@@ -1,8 +1,4 @@
-//for testing: 0, -0, +0, 5, -5, 123456789012345, 066, -, empty Enter, 12a3,
-//12 − 5, 100 − 1, 123 − 45, 1000 − 999, 5 − 5, 10 − 10.
-//Testovi: 1234/56 (22, 2), 5/7 (0, 5), 100/10 (10, 0), 0/5, 7/1, -7/2, 7/-2, 999999/999999, delilac 0 (assert).
 #include <stdlib.h>
-
 #include "bigint.h"
 
 
@@ -16,9 +12,8 @@ int main(void)
 
 	RESENJE
 	struct BigInt: niz cifara (uint8_t, jedna decimalna cifra po elementu, najznacajnija prva),
-	duzina i znak (znak + apsolutna vrednost). Deljenje je pisano (schoolbook long division)
-	nad apsolutnim vrednostima, a cifra kolicnika se odredjuje ponovljenim oduzimanjem
-	delioca.
+	duzina i znak. Deljenje je pisano (schoolbook long division)nad apsolutnim vrednostima, a 
+    cifra kolicnika se odredjuje ponovljenim oduzimanjem delioca.
 	Moduli: main.c, bigint.c, bigint.h
 
 	PREVODJENJE
@@ -38,17 +33,18 @@ int main(void)
 	Koriste se nullptr, bool i constexpr kao kljucna rec.
 
 	MISRA C
-	Odstupanja (neizbezna ili svesna):
+	Odstupanja:
 	- 21.3: malloc/realloc/free (broj cifara nije unapred poznat).
 	- 21.6: printf, getchar, ungetc, fflush (ulaz/izlaz).
 	- 15.5: vise return naredbi (compare, rani izlaz u big_int_div).
-	- assert za neispravan unos nije MISRA obrada gresaka (svesna odluka).
+	- assert za neispravan unos nije MISRA obrada gresaka.
+    - int kao tip promenljive za skladistenje povratne vrednosti funkcije getchar().
 
 	TESTIRANJE
     Unos: 0, -0, +0, 066, samo znak, prazan red, 12a3, broj duzi od pocetnog kapaciteta. 
-    Deljenje: 1234/56, 5/7, -5/7, 100/10,
-    0/5, 7/1, -7/2, 7/-2, -6/3, 999999/999999, delilac 0. Veliki brojevi uporedjeni sa online kalkulatorima
-    testirano i curenje memorije sa valgrind
+    Deljenje: 1234/56, 5/7, -5/7, 100/10,  0/5, 7/1, -7/2, 7/-2, -6/3, 999999/999999, delilac 0. 
+    Veliki brojevi uporedjeni sa online kalkulatorima
+    Curenje memorije je testirano sa valgrind
     */
 
     BigInt first_op  = get_big_number();
